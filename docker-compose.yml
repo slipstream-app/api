@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  mysqlsrv:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "slipstream"
+      MYSQL_DATABASE: "slipstream"
+    ports:
+      - "3307:3306"
+    volumes:
+      - .ignore/MySql:/var/lib/mysql
+    networks:
+      - mysql-compose-network
+
+networks: 
+  mysql-compose-network:
+    driver: bridge
