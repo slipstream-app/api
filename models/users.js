@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
-    return sequelize.define(
+    var user = sequelize.define(
         "users",
         {
             id: {
@@ -60,4 +60,12 @@ module.exports = function (sequelize, DataTypes) {
             ],
         }
     );
+
+    user.prototype.toJSON = function () {
+        var values = Object.assign({}, this.get());
+
+        delete values.password;
+        return values;
+    };
+    return user;
 };
