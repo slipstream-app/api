@@ -5,7 +5,21 @@ var models = initModels(sequelize);
 module.exports = {
     async list(req, res) {
         try {
-            const invitations = await models.invitations.findAll();
+            const invitations = await models.invitations.findAll({
+                where: {
+                    user_id: req.user.id,
+                },
+                include: [
+                    {
+                        model: models.races,
+                        as: "race",
+                        include: {
+                            model: models.users,
+                            as: "leader",
+                        },
+                    },
+                ],
+            });
             return res.json(invitations);
         } catch (err) {
             console.log(err);
