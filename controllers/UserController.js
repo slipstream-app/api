@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 module.exports = {
     async login(req, res) {
         try {
-            const user = await models.users.findOne({
+            const user = await models.users.scope("loginScope").findOne({
                 where: {
                     email: req.body.email,
                 },
