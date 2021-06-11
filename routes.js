@@ -11,7 +11,7 @@ const routes = express.Router();
 routes.get("/me", verifyJwt, UserController.me);
 routes.put("/me", verifyJwt, UserController.meUpdate);
 //routes.get("/users", verifyJwt, UserController.list);
-routes.post("/users", UserController.create);
+routes.post("/register", UserController.create);
 routes.post("/login", UserController.login);
 routes.post("/refresh", UserController.refreshToken);
 routes.get("/users/:id", UserController.show);
