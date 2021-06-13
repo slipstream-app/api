@@ -17,6 +17,16 @@ module.exports = {
                         {
                             "$drivers.id$": req.user.id,
                         },
+                        {
+                            [Op.and]: [
+                                {
+                                    "$invitations.user_id$": req.user.id,
+                                },
+                                {
+                                    "$invitations.status$": 2,
+                                },
+                            ],
+                        },
                     ],
                 },
                 include: [
@@ -24,8 +34,13 @@ module.exports = {
                         model: models.users,
                         as: "drivers",
                     },
+                    {
+                        model: models.invitations,
+                        as: "invitations",
+                    },
                 ],
             });
+
             return res.json(races);
         } catch (err) {
             console.log(err);
