@@ -29,11 +29,13 @@ routes.post("/laps-pdf", verifyJwt, LapController.createFromPdf);
 routes.get("/pilots", verifyJwt, PilotController.list);
 routes.post("/pilots", verifyJwt, PilotController.create);
 routes.post("/pilots-pdf", verifyJwt, PilotController.createFromPdf);
-routes.put("/pilots-redeem/:id", verifyJwt, PilotController.redeem);
+routes.put("/pilots/:id/redeem", verifyJwt, PilotController.redeem);
 routes.put("/pilots/:id", verifyJwt, PilotController.update);
 routes.delete("/pilots/:id", verifyJwt, PilotController.delete);
 
 //invitations
 routes.get("/invitations", verifyJwt, InvitationController.list);
 routes.post("/invitations", verifyJwt, InvitationController.create);
+routes.put("/invitations/:id/accept", verifyJwt, InvitationController.accept);
+routes.put("/invitations/:id/reject", verifyJwt, InvitationController.reject);
 module.exports = routes;

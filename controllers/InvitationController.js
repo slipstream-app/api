@@ -4,22 +4,41 @@ var initModels = require("../models/init-models");
 var models = initModels(sequelize);
 module.exports = {
     async list(req, res) {
-        try {
-            const invitations = await models.invitations.findAll({
-                where: {
-                    user_id: req.user.id,
+        const Op = Sequelize.Op;
+        let raceId = req.query.race_id;
+        let statuses = [];
+        statuses = req.query.statuses;
+        var options = {
+            where: {
+                user_id: req.user.id,
+                status: {
+                    [Op.ne]: 4,
                 },
-                include: [
-                    {
-                        model: models.races,
-                        as: "race",
-                        include: {
-                            model: models.users,
-                            as: "leader",
-                        },
+            },
+            include: [
+                {
+                    model: models.races,
+                    as: "race",
+                    include: {
+                        model: models.users,
+                        as: "leader",
                     },
-                ],
+                },
+            ],
+        };
+        if (raceId) {
+            options.where.race_id = raceId;
+            // options.where.race_id[Op.eq].push(raceId);
+        }
+        if (statuses) {
+            options.where.status[Op.or] = [];
+            statuses.forEach((status) => {
+                options.where.status[Op.or].push(status);
             });
+        }
+
+        try {
+            const invitations = await models.invitations.findAll(options);
             return res.json(invitations);
         } catch (err) {
             console.log(err);
@@ -96,36 +115,70 @@ module.exports = {
         }
     },
 
-    async update(req, res) {
+    async accept(req, res) {
         const Sequelize = require("sequelize");
         const Op = Sequelize.Op;
-        const { title, poster, overview } = req.body;
+
         const id = req.params.id;
         try {
-            await models.races.update(
-                {
-                    title,
-                    poster,
-                    overview,
+            let invitation = await models.invitations.findOne({
+                where: {
+                    user_id: req.user.id,
+                    status: 1,
+                    id: id,
                 },
-                {
-                    where: {
-                        id: {
-                            [Op.eq]: id,
-                        },
-                    },
-                }
-            );
-            return res.json({
-                msg: `Filme ${title} atualizado com sucesso!`,
             });
+
+            if (!invitation)
+                return res.status(404).json({
+                    msg: "Invitation not found",
+                });
+
+            invitation.status = 2;
+
+            await invitation.save();
+
+            const updated = await models.invitations.findByPk(id);
+
+            return res.json(updated);
         } catch (error) {
-            return res.json(
-                {
-                    msg: `Filme ${title} não foi atualizado`,
+            console.log(err);
+            return res.status(500).json({
+                msg: "Server error",
+            });
+        }
+    },
+    async reject(req, res) {
+        const Sequelize = require("sequelize");
+        const Op = Sequelize.Op;
+
+        const id = req.params.id;
+        try {
+            let invitation = await models.invitations.findOne({
+                where: {
+                    user_id: req.user.id,
+                    status: 1,
+                    id: id,
                 },
-                err
-            );
+            });
+
+            if (!invitation)
+                return res.status(404).json({
+                    msg: "Invitation not found",
+                });
+
+            invitation.status = 4;
+
+            await invitation.save();
+
+            const updated = await models.invitations.findByPk(id);
+
+            return res.json(updated);
+        } catch (error) {
+            console.log(err);
+            return res.status(500).json({
+                msg: "Server error",
+            });
         }
     },
     async delete(req, res) {

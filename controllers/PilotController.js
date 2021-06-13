@@ -167,7 +167,7 @@ module.exports = {
                 where: {
                     race_id: pilot.race_id,
                     user_id: req.user.id,
-                    status: 1,
+                    status: 2,
                 },
             });
 
@@ -179,7 +179,7 @@ module.exports = {
             pilot.user_id = req.user.id;
             await pilot.save();
 
-            invitation.status = 2;
+            invitation.status = 3;
             invitation.save();
 
             return res.json(pilot);
