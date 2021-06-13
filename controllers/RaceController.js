@@ -113,6 +113,11 @@ module.exports = {
                     pilotsServices.createPilot(payload, req);
                 });
 
+                const invitation = await models.invitations.create({
+                    race_id: race.id,
+                    user_id: req.user.id,
+                    status: 2,
+                });
                 return res.json({
                     race: race,
                 });

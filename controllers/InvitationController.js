@@ -59,6 +59,17 @@ module.exports = {
         try {
             const Op = Sequelize.Op;
 
+            const user = await models.users.findOne({
+                where: {
+                    email: req.body.email,
+                },
+            });
+
+            if (!user)
+                return res.status(404).json({
+                    msg: "User not found",
+                });
+
             let race = await models.races.findOne({
                 where: {
                     id: req.body.race_id,
@@ -71,41 +82,40 @@ module.exports = {
                     msg: "Race not found",
                 });
 
-            if (race.leader_id != req.user.id) {
-                return res.status(403).json({
-                    msg: "Not the race leader",
-                });
-            }
+            const previousRace = await models.races.findOne({
+                where: {
+                    "$drivers.id$": user.id,
+                    id: race.id,
+                },
+                include: [
+                    {
+                        model: models.users,
+                        as: "drivers",
+                    },
+                ],
+            });
+
+            if (previousRace) return res.status(200).json();
 
             let previousInvitation = await models.invitations.findOne({
                 where: {
                     race_id: race.id,
-                    user_id: req.user.id,
+                    user_id: user.id,
                     status: {
-                        [Op.not]: 3,
+                        [Op.eq]: 1,
                     },
                 },
             });
 
-            if (previousInvitation)
-                return res.status(422).json({
-                    msg: "Invitation already exists",
-                });
-
-            const user = await models.users.findByPk(req.body.user_id);
-
-            if (!user)
-                return res.status(404).json({
-                    msg: "User not found",
-                });
+            if (previousInvitation) return res.status(200).json();
 
             const invitation = await models.invitations.create({
                 race_id: race.id,
                 user_id: user.id,
-                status_id: 1,
+                status: 1,
             });
 
-            return res.status(201).json(invitation);
+            return res.status(200).json();
         } catch (error) {
             //todo global error handling
             console.error("Erro na criação", error);

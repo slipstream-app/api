@@ -36,6 +36,7 @@ module.exports = {
                             model: "races",
                             key: "id",
                         },
+                        onDelete: "CASCADE",
                     },
                     user_id: {
                         type: Sequelize.DataTypes.INTEGER,
@@ -45,6 +46,7 @@ module.exports = {
                             model: "users",
                             key: "id",
                         },
+                        onDelete: "CASCADE",
                     },
                     status: {
                         type: Sequelize.DataTypes.TINYINT,
