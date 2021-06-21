@@ -17,6 +17,7 @@ routes.post("/refresh", UserController.refreshToken);
 routes.get("/users/:id", UserController.show);
 //races
 routes.get("/me/races/", verifyJwt, RaceController.listMyRaces);
+routes.get("/me/races/metrics", verifyJwt, RaceController.metrics);
 routes.get("/races", verifyJwt, RaceController.list);
 routes.get("/races/:id", verifyJwt, RaceController.show);
 routes.post("/races", verifyJwt, RaceController.create);

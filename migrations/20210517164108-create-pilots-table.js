@@ -73,6 +73,22 @@ module.exports = {
                 type: Sequelize.DataTypes.FLOAT,
                 allowNull: true,
             },
+            total_time: {
+                type: Sequelize.DataTypes.INTEGER,
+                allowNull: true,
+            },
+            created_at: {
+                type: Sequelize.DataTypes.DATE,
+                allowNull: true,
+                defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+            },
+            updated_at: {
+                type: Sequelize.DataTypes.DATE,
+                allowNull: true,
+                defaultValue: Sequelize.literal(
+                    "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+                ),
+            },
         });
     },
 

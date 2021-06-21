@@ -27,7 +27,7 @@ module.exports = {
                 best_lap_number: element[6],
                 number_of_laps: element[7],
                 best_lap: convertTime(element[8]),
-                //   total_time: convertTime(element[9]),
+                total_time: convertTime(element[9]),
                 leader_distance: convertTime(element[10]),
                 previous_distance: convertTime(element[11]),
             };
