@@ -80,7 +80,7 @@ module.exports = {
                 include: {
                     model: models.races,
                 },
-                order: [[models.races, "raced_at", "ASC"]],
+                order: [[models.races, "raced_at", "DESC"]],
             });
 
             const avgLap = pilots[0].total_time / pilots[0].number_of_laps;
