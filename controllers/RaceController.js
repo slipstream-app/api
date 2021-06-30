@@ -76,7 +76,7 @@ module.exports = {
                 where: {
                     user_id: req.user.id,
                 },
-                limit: 5,
+                limit: 12,
                 include: {
                     model: models.races,
                 },
