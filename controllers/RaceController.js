@@ -77,16 +77,11 @@ module.exports = {
                     user_id: req.user.id,
                 },
                 limit: 5,
-                order: [["raced_at", "DESC"]],
+                include: {
+                    model: models.races,
+                },
+                order: [[models.races, "raced_at", "DESC"]],
             });
-
-            /* let avg = await sequelize.query(
-                "select avg(position) as avg from (select * from pilots p where user_id = $userId order by created_at  limit 5) test",
-                {
-                    bind: { userId: req.user.id },
-                    type: Sequelize.QueryTypes.SELECT,
-                }
-            ); */
 
             const avgLap = pilots[0].total_time / pilots[0].number_of_laps;
             const average =

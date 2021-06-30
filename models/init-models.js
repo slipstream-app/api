@@ -107,7 +107,6 @@ function initModels(sequelize) {
         foreignKey: "race_id",
     });
     pilots.belongsTo(races, {
-        as: "race",
         foreignKey: "race_id",
     });
     races.hasMany(pilots, {
