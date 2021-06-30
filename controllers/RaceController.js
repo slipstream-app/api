@@ -77,7 +77,7 @@ module.exports = {
                     user_id: req.user.id,
                 },
                 limit: 5,
-                order: [["created_at", "DESC"]],
+                order: [["raced_at", "DESC"]],
             });
 
             /* let avg = await sequelize.query(
